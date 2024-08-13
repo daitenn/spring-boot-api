@@ -4,6 +4,7 @@
 - spring-boot
 - lombok
 - swagger
-- h2
-### クラス図
-### オブジェクト図
+- h2database
+- MyBatis
+### 3層アーキテクチャー(シーケンス図)
+![images](./images/secuence.png)

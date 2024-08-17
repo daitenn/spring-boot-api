@@ -3,6 +3,7 @@ package com.example.todo_api.controller.task;
 import com.example.todo_api.service.task.TaskEntity;
 import com.example.todo_api.service.task.TaskService;
 import com.example.todoapi.controller.TasksApi;
+import com.example.todoapi.model.PageDTO;
 import com.example.todoapi.model.TaskDTO;
 import com.example.todoapi.model.TaskForm;
 import com.example.todoapi.model.TaskListDTO;
@@ -35,19 +36,28 @@ public class TaskController implements TasksApi {
   }
 
   @Override
-  public ResponseEntity<TaskListDTO> listTasks() {
-    var entityList = taskService.find();
+  public ResponseEntity<TaskListDTO> listTasks(Integer limit, Long offset) {
+    var entityList = taskService.find(limit, offset);
     var dtoList = entityList.stream()
         .map(this::toTaskDTO)
         .collect(Collectors.toList());
+
+    var pageDTO = new PageDTO();
+    pageDTO.setLimit(limit);
+    pageDTO.setOffset(offset);
+    pageDTO.setSize(dtoList.size());
+
     var dto = new TaskListDTO();
+    dto.setPage(pageDTO);
     dto.setResults(dtoList);
     return ResponseEntity.ok(dto);
   }
 
-  /*
-    taskDTOに変換するメソッド
-    @return TaskDTO
+  /**
+   * TaskDTOに変換します
+   *
+   * @param taskEntity taskForm or taskRecord
+   * @return taskDTO
    */
   private TaskDTO toTaskDTO(TaskEntity taskEntity) {
     var taskDTO = new TaskDTO();
